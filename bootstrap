@@ -18,6 +18,8 @@ aliases="source $repository/zsh/aliases.zsh"
 DEBIAN_FRONTEND=noninteractive apt-get install --yes zsh git curl fonts-powerline
 
 if [[ ! -d /home/forge/.oh-my-zsh ]]; then
+    cd /home/forge
+
     curl --fail --silent --show-error --location https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
         | sudo --user forge --set-home sh -s -- --unattended
 fi
