@@ -41,6 +41,8 @@ Allows HTTP and HTTPS (ports 80 and 443) from [Cloudflare's IP addresses](https:
 
 Removes public rules for MySQL (3306) and PostgreSQL (5432), so they can only be reached via an SSH tunnel. Rules scoped to specific IPs, like a separate app server, are left alone.
 
+Unlike the other scripts, there's no IP list to keep up to date, so it only needs running once when setting up a server.
+
 ## Setting up a new server
 
 1. Run the recipe to clone this repository.
@@ -52,11 +54,17 @@ Removes public rules for MySQL (3306) and PostgreSQL (5432), so they can only be
     DRY_RUN=1 /opt/duncfrastructure/firewall/block-databases
     ```
 4. Run them for real, without `DRY_RUN`.
-5. Add these scheduled jobs in Forge, run as `root`. The firewall jobs run a little after the pull, so they always use the latest scripts.
+5. Add these scheduled jobs in Forge, run as `root`:
 
-    | Command | Frequency (custom) |
+    | Command | Frequency |
     | --- | --- |
-    | `git -C /opt/duncfrastructure pull --ff-only` | `0 0 * * *` |
-    | `/opt/duncfrastructure/firewall/allow-forge-ssh` | `15 0 * * *` |
-    | `/opt/duncfrastructure/firewall/allow-cloudflare-web` | `15 0 * * *` |
-    | `/opt/duncfrastructure/firewall/block-databases` | `15 0 * * *` |
+    | `/opt/duncfrastructure/firewall/allow-forge-ssh` | Nightly |
+    | `/opt/duncfrastructure/firewall/allow-cloudflare-web` | Nightly |
+
+## Updating
+
+Servers don't pull changes to this repository automatically. To update them, add this to a Forge recipe, run as `root`:
+
+```sh
+git -C /opt/duncfrastructure pull --ff-only
+```
