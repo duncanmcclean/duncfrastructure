@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# Only allows SSH from Laravel Forge's IP addresses.
+#
+# Usage: allow-forge-ssh
+
+source "$(dirname "$(realpath "$0")")/../lib/firewall.sh"
+
+prepare_firewall
+
+forge_ips=$(fetch_ip_list https://forge.laravel.com/ips-v4.txt)
+
+mapfile -t allowed_ips <<< "$forge_ips"
+
+sync_allowed_ips duncfrastructure:forge-ssh 22 "${allowed_ips[@]}"
+remove_public_rules 22

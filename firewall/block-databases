@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Removes public rules for MySQL and PostgreSQL, so they can only be reached via an SSH tunnel.
+# Rules scoped to specific IPs (eg. a separate app server) are left alone.
+#
+# Usage: block-databases
+
+source "$(dirname "$(realpath "$0")")/../lib/firewall.sh"
+
+prepare_firewall
+
+if ! ufw status verbose | grep --quiet 'deny (incoming)'; then
+    echo "ufw isn't active with a default incoming policy of deny, so removing rules wouldn't block anything." >&2
+    exit 1
+fi
+
+remove_public_rules 3306
+remove_public_rules 5432

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Only allows HTTP and HTTPS from Cloudflare's IP addresses.
+#
+# Usage: allow-cloudflare-web
+
+source "$(dirname "$(realpath "$0")")/../lib/firewall.sh"
+
+prepare_firewall
+
+cloudflare_ips=$(fetch_ip_list https://www.cloudflare.com/ips-v4 https://www.cloudflare.com/ips-v6)
+
+mapfile -t allowed_ips <<< "$cloudflare_ips"
+
+sync_allowed_ips duncfrastructure:cloudflare-web 80,443 "${allowed_ips[@]}"
+remove_public_rules 80
+remove_public_rules 443
