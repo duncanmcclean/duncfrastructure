@@ -11,7 +11,7 @@ git clone https://github.com/duncanmcclean/duncfrastructure.git /opt/duncfrastru
 /opt/duncfrastructure/bootstrap
 ```
 
-The `bootstrap` script installs zsh and Oh My Zsh for the `forge` user, makes zsh its default shell and loads the [aliases](zsh/aliases.zsh). It's safe to run again.
+The `bootstrap` script loads the [aliases](bash/aliases.sh) in the `forge` user's `.bashrc`. It's safe to run again.
 
 ## Firewall
 

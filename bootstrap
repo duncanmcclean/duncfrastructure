@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Sets up a fresh Forge server: zsh and Oh My Zsh for the forge user, with my aliases.
+# Sets up a fresh Forge server: loads my aliases for the forge user.
 #
 # Usage: bootstrap
 
@@ -13,19 +13,8 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 repository=$(dirname "$(realpath "$0")")
-aliases="source $repository/zsh/aliases.zsh"
+aliases="source $repository/bash/aliases.sh"
 
-DEBIAN_FRONTEND=noninteractive apt-get install --yes zsh git curl fonts-powerline
-
-if [[ ! -d /home/forge/.oh-my-zsh ]]; then
-    cd /home/forge
-
-    curl --fail --silent --show-error --location https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
-        | sudo --user forge --set-home sh -s -- --unattended
-fi
-
-chsh --shell "$(command -v zsh)" forge
-
-if ! grep --quiet --line-regexp --fixed-strings "$aliases" /home/forge/.zshrc; then
-    echo "$aliases" | sudo --user forge tee --append /home/forge/.zshrc > /dev/null
+if ! grep --quiet --line-regexp --fixed-strings "$aliases" /home/forge/.bashrc; then
+    echo "$aliases" | sudo --user forge tee --append /home/forge/.bashrc > /dev/null
 fi
